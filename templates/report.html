@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Report - Kidney Cancer Detection</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #676b6d;
+    }
+    .navbar {
+      background-color: #9c9494;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      padding: 15px 40px;
+    }
+    .navbar-brand {
+      color: #0c0c40;
+      font-weight: bold;
+      font-size: 24px;
+    }
+    .nav-link {
+      color: #0c0c40;
+      margin-right: 20px;
+    }
+    .nav-link:hover {
+      color: #007bff;
+    }
+    .report-section {
+      background-color: #ffffff;
+      margin: 50px auto;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+      max-width: 900px;
+    }
+    .report-section h2 {
+      color: #0c0c40;
+      font-weight: bold;
+      font-size: 28px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    .table th {
+      background-color: #f0f3f5;
+      color: #0c0c40;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light">
+  <a class="navbar-brand font-weight-bold text-dark" href="/">Kidney Cancer</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon">☰</span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link text-dark" href="/">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-dark" href="/about">About</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-dark" href="/prediction">Prediction</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-primary font-weight-bold" href="/report">Report</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link btn btn-sm btn-danger text-white ml-2" href="/login">Login</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Report Section -->
+<section class="report-section">
+  <h2>Prediction Report</h2>
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Gender</th>
+        <th>Prediction</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in reports %}
+      <tr>
+        <td>{{ r.name }}</td>
+        <td>{{ r.age }}</td>
+        <td>{{ r.gender }}</td>
+        <td style="color: {{ 'green' if 'Normal' in r.result else 'red' }}"><strong>{{ r.result }}</strong></td>
+        <td>{{ r.date }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+<!-- Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
