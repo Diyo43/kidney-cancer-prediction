@@ -84,7 +84,12 @@
        <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
        <li class="nav-item"><a class="nav-link" href="/prediction">Prediction</a></li>
        <li class="nav-item"><a class="nav-link" href="/report">Report</a></li>
+       {% if session.get('user_email') %}
+       <li class="nav-item"><a class="nav-link btn btn-sm btn-secondary text-white" href="/logout">Logout</a></li>
+       {% else %}
        <li class="nav-item"><a class="nav-link btn btn-sm btn-danger text-white" href="/login">Login</a></li>
+       {% endif %}
+
       </ul>
 
     </div>

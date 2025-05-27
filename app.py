@@ -8,7 +8,7 @@ import os
 from datetime import datetime
 import mysql.connector
 
-# Database connection
+# --- Database Connection ---
 def connect_db():
     return mysql.connector.connect(
         host="localhost",
@@ -17,16 +17,27 @@ def connect_db():
         database="kidney_db"
     )
 
-# Load the trained model
+# --- Load Trained Model ---
 model = load_model('models/cnn-parameters-improvement-03-1.00.keras')
 
-# Doctor account for login
+# --- Authorized Doctor Credentials ---
 AUTHORIZED_USER = {
     'email': 'doctor@gmail.com',
     'password': 'drpass123'
 }
 
-# Cancer prediction logic
+# --- Validate Kidney Image Format ---
+def is_valid_kidney_image(image):
+    if image is None:
+        return False
+    h, w = image.shape[:2]
+    if h < 100 or w < 100:
+        return False
+    if len(image.shape) == 3 and np.mean(np.abs(image[..., 0] - image[..., 1])) > 20:
+        return False
+    return True
+
+# --- Cancer Prediction Function ---
 def predict_cancer(img_path):
     image = cv2.imread(img_path)
     if image is None:
@@ -56,16 +67,15 @@ def predict_cancer(img_path):
     image = np.expand_dims(image, axis=0)
 
     prediction = model.predict(image)[0][0]
-    print(f"Prediction Score: {prediction:.4f}")
     label = "Cancer Detected" if prediction > 0.5 else "Normal"
     return label, float(prediction)
 
-# Flask app setup
+# --- Flask App Config ---
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
-app.config['UPLOAD_FOLDER'] = 'static/uploads'
+app.config['UPLOAD_FOLDER'] = r'C:\Users\pc\Music\Kidney cancer detection\Dataset'
 
-# Routes
+# --- Routes ---
 @app.route('/')
 def home():
     if 'user_email' not in session:
@@ -74,7 +84,9 @@ def home():
 
 @app.route('/about')
 def about():
-    return render_template('about.html')
+    if 'user_email' not in session:
+        return redirect(url_for('login'))
+    return render_template('about.html', modality="CT Scan")
 
 @app.route('/prediction', methods=['GET', 'POST'])
 def prediction():
@@ -93,6 +105,11 @@ def prediction():
         if os.path.exists(filepath):
             os.remove(filepath)
         image_file.save(filepath)
+
+        image = cv2.imread(filepath)
+        if not is_valid_kidney_image(image):
+            os.remove(filepath)
+            return render_template('prediction.html', error="Invalid image. Please upload a real kidney CT scan.")
 
         result, score = predict_cancer(filepath)
         date = datetime.now().strftime("%Y-%m-%d %H:%M")
@@ -140,5 +157,6 @@ def logout():
     session.pop('user_email', None)
     return redirect(url_for('login'))
 
+# --- Run the App ---
 if __name__ == '__main__':
     app.run(debug=True)

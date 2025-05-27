@@ -72,7 +72,11 @@
         <a class="nav-link text-primary font-weight-bold" href="/report">Report</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link btn btn-sm btn-danger text-white ml-2" href="/login">Login</a>
+      {% if session.get('user_email') %}
+      <li class="nav-item"><a class="nav-link btn btn-sm btn-secondary text-white" href="/logout">Logout</a></li>
+      {% else %}
+      <li class="nav-item"><a class="nav-link btn btn-sm btn-danger text-white" href="/login">Login</a></li>
+      {% endif %}
       </li>
     </ul>
   </div>
