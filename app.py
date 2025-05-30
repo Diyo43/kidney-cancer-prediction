@@ -17,7 +17,7 @@ def connect_db():
         database="kidney_db"
     )
 
-# --- Load Trained Model ---
+# --- Load Trained CT Model ---
 model = load_model('models/cnn-parameters-improvement-03-1.00.keras')
 
 # --- Authorized Doctor Credentials ---
@@ -37,7 +37,7 @@ def is_valid_kidney_image(image):
         return False
     return True
 
-# --- Cancer Prediction Function ---
+# --- Cancer Prediction Function for CT ---
 def predict_cancer(img_path):
     image = cv2.imread(img_path)
     if image is None:
@@ -86,7 +86,7 @@ def home():
 def about():
     if 'user_email' not in session:
         return redirect(url_for('login'))
-    return render_template('about.html', modality="CT Scan")
+    return render_template('about.html', modality="CT and MRI Support Coming Soon")
 
 @app.route('/prediction', methods=['GET', 'POST'])
 def prediction():
@@ -97,7 +97,16 @@ def prediction():
         name = request.form['name']
         age = request.form['age']
         gender = request.form['gender']
+        scan_type = request.form.get('scan_type')
         image_file = request.files['image']
+
+        # Block MRI support for now
+        if scan_type == "MRI":
+            return render_template("prediction.html", error="MRI scan support is coming soon. Please upload a CT scan.")
+
+        # Validate file
+        if image_file.filename == '':
+            return render_template("prediction.html", error="No image selected.")
 
         filename = secure_filename(image_file.filename)
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
@@ -116,8 +125,8 @@ def prediction():
 
         db = connect_db()
         cursor = db.cursor()
-        sql = "INSERT INTO reports (name, age, gender, result, date) VALUES (%s, %s, %s, %s, %s)"
-        values = (name, age, gender, result, date)
+        sql = "INSERT INTO reports (name, age, gender, scan_type, result, date) VALUES (%s, %s, %s, %s, %s, %s)"
+        values = (name, age, gender, scan_type, result, date)
         cursor.execute(sql, values)
         db.commit()
         cursor.close()
