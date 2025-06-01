@@ -1,10 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Prediction - Kidney Cancer Detection</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Bootstrap CSS -->
+  <link
+    rel="stylesheet"
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+  />
+
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -12,35 +18,30 @@
     }
     .navbar {
       background-color: #9c9494;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
       padding: 15px 40px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
-    .navbar-brand {
-      color: #0c0c40;
-      font-weight: bold;
-      font-size: 24px;
-    }
+    .navbar-brand,
     .nav-link {
       color: #0c0c40;
-      margin-right: 20px;
+      font-weight: bold;
     }
     .nav-link:hover {
       color: #007bff;
     }
     .form-section {
-      background-color: #ffffff;
+      background-color: #fff;
       margin: 60px auto;
       padding: 50px 40px;
       border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
       max-width: 700px;
     }
     .form-section h2 {
       color: #0c0c40;
       font-weight: bold;
-      font-size: 28px;
-      margin-bottom: 30px;
       text-align: center;
+      margin-bottom: 30px;
     }
     .btn-predict {
       background-color: #007bff;
@@ -62,24 +63,37 @@
   </style>
 </head>
 <body>
-
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg">
     <a class="navbar-brand" href="/">Kidney Cancer</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarNav"
+    >
       <span class="navbar-toggler-icon">☰</span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
         <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
-        <li class="nav-item"><a class="nav-link active font-weight-bold text-primary" href="/prediction">Prediction</a></li>
+        <li class="nav-item">
+          <a class="nav-link active text-primary" href="/prediction">Prediction</a>
+        </li>
         <li class="nav-item"><a class="nav-link" href="/report">Report</a></li>
         {% if session.get('user_email') %}
-          <li class="nav-item"><a class="nav-link btn btn-sm btn-secondary text-white" href="/logout">Logout</a></li>
+        <li class="nav-item">
+          <a class="nav-link btn btn-sm btn-secondary text-white" href="/logout"
+            >Logout</a
+          >
+        </li>
         {% else %}
-          <li class="nav-item"><a class="nav-link btn btn-sm btn-danger text-white" href="/login">Login</a></li>
+        <li class="nav-item">
+          <a class="nav-link btn btn-sm btn-danger text-white" href="/login"
+            >Login</a
+          >
+        </li>
         {% endif %}
       </ul>
     </div>
@@ -87,21 +101,45 @@
 
   <!-- Prediction Form Section -->
   <section class="form-section">
-    <h2>Kidney Cancer Prediction Form</h2>
+    <h2>Kidney Cancer MRI Prediction</h2>
 
     {% if error %}
-      <div class="error-message">{{ error }}</div>
+    <div class="error-message">{{ error }}</div>
     {% endif %}
 
-    <form method="POST" action="/prediction" enctype="multipart/form-data">
+    {% if result %}
+    <div class="alert alert-info text-center">
+      <strong>Prediction Result:</strong> {{ result }}
+    </div>
+    {% endif %}
+
+    <form
+      method="POST"
+      enctype="multipart/form-data"
+      action="/prediction"
+    >
       <div class="form-group">
         <label for="name">Full Name</label>
-        <input type="text" name="name" id="name" class="form-control" placeholder="Enter your full name" required>
+        <input
+          type="text"
+          name="name"
+          id="name"
+          class="form-control"
+          placeholder="Enter your full name"
+          required
+        />
       </div>
 
       <div class="form-group">
         <label for="age">Age</label>
-        <input type="number" name="age" id="age" class="form-control" placeholder="Enter your age" required>
+        <input
+          type="number"
+          name="age"
+          id="age"
+          class="form-control"
+          placeholder="Enter your age"
+          required
+        />
       </div>
 
       <div class="form-group">
@@ -114,19 +152,17 @@
       </div>
 
       <div class="form-group">
-        <label for="scan_type">Scan Type</label>
-        <select name="scan_type" id="scan_type" class="form-control" required>
-          <option value="">Select scan type</option>
-          <option value="CT">CT Scan</option>
-          <option value="MRI">MRI Scan (Coming Soon)</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="image">Upload Kidney Scan Image</label>
-        <input type="file" name="image" id="image" class="form-control-file" accept=".jpg,.jpeg,.png" required>
+        <label for="image">Upload MRI Kidney Scan</label>
+        <input
+          type="file"
+          name="image"
+          id="image"
+          class="form-control-file"
+          accept=".jpg,.jpeg,.png"
+          required
+        />
         <small class="form-text text-warning mt-2">
-          ⚠️ Currently, only CT scan images are supported. MRI support will be added soon. Accepted formats: .jpg, .jpeg, .png
+          Accepted formats: .jpg, .jpeg, .png — MRI scans only.
         </small>
       </div>
 
