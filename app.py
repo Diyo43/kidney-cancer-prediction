@@ -7,13 +7,28 @@ import os
 from datetime import datetime
 import mysql.connector
 
-# --- Flask Setup ---
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
-app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), 'uploads')
-os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-# --- Database Connection ---
+UPLOAD_FOLDER = os.path.join(os.getcwd(), 'uploads')
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+
+AUTHORIZED_USER = {
+    'email': 'doctor@gmail.com',
+    'password': 'drpass123'
+}
+
+MODEL_PATH = os.path.join('models', 'cnn-parameters-improvement-02-0.96.keras')
+model = load_model(MODEL_PATH)
+
+# ---------- Helper Functions ----------
+
+def is_allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 def connect_db():
     return mysql.connector.connect(
         host="localhost",
@@ -22,59 +37,53 @@ def connect_db():
         database="kidney_db"
     )
 
-# --- Load Trained Model ---
-model = load_model('models/cnn-parameters-improvement-03-1.00.keras')
+import imutils
 
-# --- Hardcoded Doctor Login ---
-AUTHORIZED_USER = {
-    'email': 'doctor@gmail.com',
-    'password': 'drpass123'
-}
+def crop_kidney_contour(image):
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+    _, thresh = cv2.threshold(blurred, 45, 255, cv2.THRESH_BINARY)
 
-# --- Image Validation for MRI Scan ---
-def is_valid_mri(image):
-    if image is None or len(image.shape) < 2:
-        return False
-    h, w = image.shape[:2]
-    if h < 100 or w < 100:
-        return False
-    # Accept grayscale or near-grayscale images
-    if len(image.shape) == 2 or image.shape[2] == 1:
-        return True
-    b, g, r = cv2.split(image)
-    return (np.mean(np.abs(r - g)) < 15 and
-            np.mean(np.abs(r - b)) < 15 and
-            np.mean(np.abs(g - b)) < 15)
+    kernel = np.ones((5, 5), np.uint8)
+    thresh = cv2.erode(thresh, kernel, iterations=2)
+    thresh = cv2.dilate(thresh, kernel, iterations=2)
 
-# --- Prediction Logic ---
+    contours = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours = imutils.grab_contours(contours)
+
+    if not contours:
+        raise ValueError("No kidney contour found in the image.")
+
+    c = max(contours, key=cv2.contourArea)
+    x, y, w, h = cv2.boundingRect(c)
+    return image[y:y+h, x:x+w]
+
 def predict_cancer(filepath):
+    if not is_allowed_file(filepath):
+        raise ValueError("Unsupported file type. Upload .png, .jpg, or .jpeg only.")
+
     image = cv2.imread(filepath)
     if image is None:
-        raise ValueError("Invalid image loaded.")
-    
-    # Convert BGR (OpenCV default) to RGB
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    
-    # Resize to (240, 240)
-    image = cv2.resize(image, (240, 240))
-    
-    # Normalize pixel values to [0, 1]
-    image = image / 255.0
-    
-    # Add batch dimension: (1, 240, 240, 3)
-    image = np.expand_dims(image, axis=0)
-    
-    # Predict with model
-    prediction = model.predict(image)[0][0]
-    print(f"[DEBUG] Prediction: {prediction:.4f}")
-    
-    # Interpret prediction (adjust threshold if needed)
-    if prediction > 0.5:
-        return "Normal"
-    else:
-        return "Cancer Detected"
+        raise ValueError(f"Image failed to load. Path: {filepath}")
 
-# --- Routes ---
+    # ✅ Match training logic
+    image = crop_kidney_contour(image)
+    image = cv2.resize(image, (240, 240))
+    image = image.astype('float32') / 255.0
+    image = np.expand_dims(image, axis=0)
+
+    # ✅ Correct logic: 1 = cancer, 0 = normal
+    prediction = model.predict(image)[0][0]
+    print(f"[DEBUG] Prediction raw value: {prediction:.4f}")
+
+    if prediction >= 0.5:
+        return f"Cancer Detected (Confidence: {prediction:.2f})"
+    else:
+        return f"Normal (Confidence: {1 - prediction:.2f})"
+
+
+# ---------- Routes ----------
+
 @app.route('/')
 def home():
     if 'user_email' not in session:
@@ -92,8 +101,7 @@ def prediction():
     if 'user_email' not in session:
         return redirect(url_for('login'))
 
-    result = None
-    error = None
+    result, error = None, None
 
     if request.method == 'POST':
         name = request.form.get('name')
@@ -102,37 +110,33 @@ def prediction():
         image_file = request.files.get('image')
 
         if not image_file or image_file.filename == '':
-            error = "Please upload a valid image."
+            error = "Please upload a valid MRI image."
+        elif not is_allowed_file(image_file.filename):
+            error = "Unsupported file type. Use PNG, JPG, or JPEG only."
         else:
-            filename = secure_filename(image_file.filename)
+            base_filename = secure_filename(image_file.filename)
+            timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+            filename = f"{timestamp}_{base_filename}"
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-
-            # Remove file if it already exists
-            if os.path.exists(filepath):
-                os.remove(filepath)
-
             image_file.save(filepath)
-            image = cv2.imread(filepath)
 
-            if not is_valid_mri(image):
-                os.remove(filepath)
-                error = "Invalid image. Please upload a grayscale-like MRI scan."
-            else:
-                try:
-                    result = predict_cancer(filepath)
+            try:
+                result = predict_cancer(filepath)
+                print(f"[DEBUG] Final Prediction Result: {result}")
 
-                    # Save result to database
-                    db = connect_db()
-                    cursor = db.cursor()
-                    cursor.execute("""
-                        INSERT INTO reports (name, age, gender, scan_type, result, date)
-                        VALUES (%s, %s, %s, %s, %s, %s)
-                    """, (name, age, gender, "MRI", result, datetime.now().strftime("%Y-%m-%d %H:%M")))
-                    db.commit()
-                    cursor.close()
-                    db.close()
-                except Exception as e:
-                    error = f"Error during prediction or DB save: {str(e)}"
+                db = connect_db()
+                cursor = db.cursor()
+                cursor.execute("""
+                    INSERT INTO reports (name, age, gender, scan_type, result, date)
+                    VALUES (%s, %s, %s, %s, %s, %s)
+                """, (name, age, gender, "MRI", result, datetime.now().strftime("%Y-%m-%d %H:%M")))
+                db.commit()
+                cursor.close()
+                db.close()
+
+            except Exception as e:
+                error = f"Prediction error: {str(e)}"
+                print(f"[ERROR] {error}")
 
     return render_template('prediction.html', result=result, error=error)
 
@@ -155,6 +159,7 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
+
         if email == AUTHORIZED_USER['email'] and password == AUTHORIZED_USER['password']:
             session['user_email'] = email
             return redirect(url_for('home'))
@@ -167,6 +172,5 @@ def logout():
     session.pop('user_email', None)
     return redirect(url_for('login'))
 
-# --- Run Application ---
 if __name__ == '__main__':
     app.run(debug=True)
