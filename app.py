@@ -6,6 +6,7 @@ import cv2
 import os
 from datetime import datetime
 import mysql.connector
+import imutils
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -37,8 +38,6 @@ def connect_db():
         database="kidney_db"
     )
 
-import imutils
-
 def crop_kidney_contour(image):
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     blurred = cv2.GaussianBlur(gray, (5, 5), 0)
@@ -60,27 +59,35 @@ def crop_kidney_contour(image):
 
 def predict_cancer(filepath):
     if not is_allowed_file(filepath):
-        raise ValueError("Unsupported file type. Upload .png, .jpg, or .jpeg only.")
+        raise ValueError("Unsupported file type. Use .png, .jpg, or .jpeg only.")
 
     image = cv2.imread(filepath)
     if image is None:
-        raise ValueError(f"Image failed to load. Path: {filepath}")
+        raise ValueError("Image failed to load. Ensure it's a valid MRI.")
 
-    # ✅ Match training logic
+    # 🔒 Image quality checks before crop
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    sat_mean = np.mean(hsv[:, :, 1])
+    brightness = np.mean(image)
+
+    if sat_mean > 40:
+        raise ValueError("Rejected: image too colorful. Upload grayscale MRI only.")
+    if brightness < 15 or brightness > 245:
+        raise ValueError("Rejected: image too dark or bright. Upload a clear MRI scan.")
+
+    # 🧠 Cropping and prediction
     image = crop_kidney_contour(image)
     image = cv2.resize(image, (240, 240))
     image = image.astype('float32') / 255.0
     image = np.expand_dims(image, axis=0)
 
-    # ✅ Correct logic: 1 = cancer, 0 = normal
     prediction = model.predict(image)[0][0]
-    print(f"[DEBUG] Prediction raw value: {prediction:.4f}")
+    print(f"[DEBUG] Prediction raw: {prediction:.4f}")
 
     if prediction >= 0.5:
         return f"Cancer Detected (Confidence: {prediction:.2f})"
     else:
         return f"Normal (Confidence: {1 - prediction:.2f})"
-
 
 # ---------- Routes ----------
 
@@ -122,7 +129,7 @@ def prediction():
 
             try:
                 result = predict_cancer(filepath)
-                print(f"[DEBUG] Final Prediction Result: {result}")
+                print(f"[DEBUG] Final Prediction: {result}")
 
                 db = connect_db()
                 cursor = db.cursor()
