@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <title>Kidney Cancer Detection - Home</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <title>Kidney Cancer Detection - Home</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <style>
-    
-    body, html {
+    body,
+    html {
       height: 100%;
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
@@ -15,118 +16,187 @@
       background-size: cover;
     }
 
-    
-    .overlay {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5); /* Dark semi-transparent background */
-      z-index: 1;
-    }
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #e9f0f4;
-      margin: 0;
-    }
+    /* Navbar */
     .navbar {
-      background-color: #9c9494;
-      border-bottom: 2px solid #dee2e6;
+      background-color: #f7f5f5;
       padding: 15px 40px;
+      border-bottom: 2px solid #dee2e6;
     }
+
     .navbar-brand {
       color: #0c0c40;
       font-weight: bold;
     }
+
     .nav-link {
       color: #0c0c40 !important;
       margin-right: 15px;
     }
+
     .nav-link:hover {
       color: orangered !important;
     }
+
+    /* Hero Section (First Card) */
     .hero-section {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      flex-wrap: wrap;
-      background-color: #ffffff;
       padding: 80px 10%;
       margin: 60px auto;
       border-radius: 16px;
       max-width: 1200px;
       box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
     }
+
     .hero-text {
-      max-width: 550px;
+      max-width: 45%;
     }
+
     .hero-text h2 {
       font-size: 42px;
       font-weight: bold;
       color: #0c0c40;
     }
+
     .hero-text h2 span {
       color: orangered;
+      text-transform: uppercase;
     }
+
     .hero-text p {
       font-size: 18px;
       color: #333;
       margin-top: 15px;
     }
+
     .hero-image {
       flex: 1;
-      max-width: 480px;
+      max-width: 45%;
       margin-top: 20px;
       box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
       border-radius: 12px;
       overflow: hidden;
     }
+
     .hero-image img {
       width: 100%;
       display: block;
     }
+
+    /* About Section (Second Card) */
+    .about-section {
+      display: flex;
+      align-items: flex-start; /* Align content to the top of the card */
+      justify-content: flex-start; /* Align text to the left */
+      padding: 60px 10%;
+      background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent background */
+      text-align: left; /* Align text to the left */
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+      border-radius: 16px;
+      max-width: 1200px;
+      margin: 60px auto;
+    }
+
+    .about-text {
+      flex: 1;
+      padding: 20px;
+      text-align: left; /* Ensure text is aligned to the left */
+    }
+
+    .about-section h2 {
+      font-size: 36px;
+      color: orangered;
+      font-weight: bold;
+      margin-bottom: 30px;
+      text-transform: uppercase;
+    }
+
+    .about-section p {
+      font-size: 18px;
+      color: #333;
+      line-height: 1.6;
+      margin: 0 auto;
+      max-width: 500px;
+    }
+
+    .about-section p:first-of-type {
+      color: #0c0c40;
+    }
+
+    /* Footer */
+    footer {
+      background-color: #f4f2f2;
+      color: rgb(11, 11, 11);
+      padding: 30px 10%;
+      text-align: center;
+    }
+
+    footer a {
+      color: rgb(16, 15, 15);
+      text-decoration: none;
+      margin: 0 15px;
+    }
+
+    footer a:hover {
+      color: orangered;
+    }
   </style>
 </head>
+
 <body>
 
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-light">
-    <a class="navbar-brand" href="home.html">Kidney Cancer</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <a class="navbar-brand" href="/">Kidney Cancer Detection</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon">☰</span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ml-auto">
-       <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
-       <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
-       <li class="nav-item"><a class="nav-link" href="/prediction">Prediction</a></li>
-       <li class="nav-item"><a class="nav-link" href="/report">Report</a></li>
-       {% if session.get('user_email') %}
-       <li class="nav-item"><a class="nav-link btn btn-sm btn-secondary text-white" href="/logout">Logout</a></li>
-       {% else %}
-       <li class="nav-item"><a class="nav-link btn btn-sm btn-danger text-white" href="/login">Login</a></li>
-       {% endif %}
-
+        <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="/prediction">Prediction</a></li>
+        <li class="nav-item"><a class="nav-link" href="/report">Report</a></li>
+        {% if session.get('user_email') %}
+        <li class="nav-item"><a class="nav-link btn btn-sm btn-secondary text-white" href="/logout">Logout</a></li>
+        {% else %}
+        <li class="nav-item"><a class="nav-link btn btn-sm btn-danger text-white" href="/login">Login</a></li>
+        {% endif %}
       </ul>
-
     </div>
   </nav>
- 
-  <!-- Hero Section -->
+
+  <!-- Hero Section (First Card) -->
   <section class="hero-section">
     <div class="hero-text">
       <h2>Find the Most <span>Accurate</span> Online Kidney Cancer <span>Prediction</span></h2>
-      <p>Our AI-driven platform allows quick and accurate detection of kidney cancer using medical images. Trusted by professionals.</p>
+      <p>Our AI-driven platform allows quick and accurate detection of kidney cancer using medical images. Trusted by professionals worldwide.</p>
     </div>
     <div class="hero-image">
       <img src="static/image/kidney.jpg" alt="Kidney Illustration">
     </div>
   </section>
 
+  <!-- About Section (Second Card) -->
+  <section class="about-section">
+    <div class="about-text">
+      <h2>About the Kidney Cancer Detection System</h2>
+      <p>The Kidney Cancer Detection System employs cutting-edge artificial intelligence (AI) and machine learning (ML) techniques to analyze medical images and accurately detect signs of kidney cancer. The platform uses advanced convolutional neural networks (CNN) to identify abnormalities in kidney images, such as those from MRIs or CT scans. The result is a highly reliable and efficient diagnostic tool that assists healthcare professionals in making timely and informed decisions.</p>
+      <p>This system empowers clinicians to detect kidney cancer early, potentially saving lives by enabling quicker treatment. By integrating seamlessly into existing medical workflows, the platform provides an easy-to-use interface for medical practitioners around the world, helping them achieve better patient outcomes through fast, accurate cancer detection.</p>
+      <p>Utilizing deep learning models trained on vast medical datasets, the system ensures that kidney cancer detection is more accessible, faster, and highly accurate—critical factors in improving cancer diagnosis and treatment worldwide.</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Kidney Cancer Detection. All Rights Reserved.</p>
+    <a href="/contact">Contact</a> | <a href="/privacy">Privacy Policy</a> | <a href="/terms">Terms of Service</a>
+  </footer>
+
   <!-- Scripts -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
+
 </html>
