@@ -63,20 +63,33 @@ def predict_cancer(filepath):
 
     image = cv2.imread(filepath)
     if image is None:
-        raise ValueError("Image failed to load. Ensure it's a valid MRI.")
+        raise ValueError("Image failed to load. Ensure it's a valid MRI scan.")
 
-    # 🔒 Image quality checks before crop
-    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-    sat_mean = np.mean(hsv[:, :, 1])
-    brightness = np.mean(image)
+    # ✅ Check if the image is in RGB format
+    if len(image.shape) != 3 or image.shape[2] != 3:
+        raise ValueError("Invalid image format. MRI image must be in RGB format.")
 
-    if sat_mean > 40:
+    # ✅ Check if image is grayscale disguised as RGB
+    b, g, r = cv2.split(image)
+    if not (np.allclose(b, g, atol=5) and np.allclose(g, r, atol=5)):
         raise ValueError("Rejected: image too colorful. Upload grayscale MRI only.")
-    if brightness < 15 or brightness > 245:
-        raise ValueError("Rejected: image too dark or bright. Upload a clear MRI scan.")
 
-    # 🧠 Cropping and prediction
-    image = crop_kidney_contour(image)
+    # ✅ Check image brightness
+    brightness = np.mean(image)
+    if brightness < 15 or brightness > 245:
+        raise ValueError("Rejected: image too dark or too bright. Upload a clear MRI scan.")
+
+    # ✅ Check image resolution
+    if image.shape[0] < 100 or image.shape[1] < 100:
+        raise ValueError("Rejected: image resolution too low. Upload a higher resolution MRI image.")
+
+    # ✅ Crop kidney region
+    try:
+        image = crop_kidney_contour(image)
+    except Exception as e:
+        raise ValueError(f"Contour error: {str(e)}")
+
+    # ✅ Preprocess and predict
     image = cv2.resize(image, (240, 240))
     image = image.astype('float32') / 255.0
     image = np.expand_dims(image, axis=0)
@@ -88,6 +101,7 @@ def predict_cancer(filepath):
         return f"Cancer Detected (Confidence: {prediction:.2f})"
     else:
         return f"Normal (Confidence: {1 - prediction:.2f})"
+
 
 # ---------- Routes ----------
 
