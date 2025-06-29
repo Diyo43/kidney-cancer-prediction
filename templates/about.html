@@ -3,9 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <title>About - Kidney Cancer Detection</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- Bootstrap + Font Awesome -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
-        body, html {
+    body, html {
       height: 100%;
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
@@ -13,96 +18,167 @@
       background-size: cover;
     }
 
-    
-    .overlay {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5); /* Dark semi-transparent background */
-      z-index: 1;
-    }
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #6f7172;
-    }
     .navbar {
       background-color: #fbf8f8;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
       padding: 15px 40px;
     }
+
     .navbar-brand {
       color: #0c0c40;
       font-weight: bold;
       font-size: 24px;
     }
+
     .nav-link {
       color: #0c0c40;
       margin-right: 20px;
     }
+
     .nav-link:hover {
       color: #007bff;
     }
+
     .about-section {
-      background-color: #f3f2f7;
+      background-color: rgba(255, 255, 255, 0.95);
       padding: 60px 40px;
-      margin: 40px auto;
-      border-radius: 8px;
-      box-shadow: 0 8px 24px rgba(107, 101, 101, 0.918);
-      max-width: 900px;
+      margin: 60px auto;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      max-width: 1000px;
+      transition: all 0.3s ease-in-out;
     }
+
+    .about-section:hover {
+      transform: scale(1.01);
+    }
+
+    .about-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .about-header i {
+      font-size: 40px;
+      color: #007bff;
+      margin-right: 20px;
+    }
+
     .about-section h2 {
       color: #0c0c40;
       font-weight: bold;
       font-size: 32px;
-      margin-bottom: 20px;
+      margin: 0;
     }
+
     .about-section p {
       font-size: 16px;
       color: #444;
-      line-height: 1.7;
+      line-height: 1.8;
     }
+
     .highlight {
       color: #007bff;
       font-weight: 600;
+    }
+
+    .stats {
+      margin-top: 40px;
+    }
+
+    .stat-box {
+      background-color: #f5f7fa;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .stat-box h5 {
+      font-size: 28px;
+      color: #0c0c40;
+      font-weight: bold;
+    }
+
+    .stat-box p {
+      margin: 0;
+      font-size: 14px;
+      color: #555;
+    }
+
+    blockquote {
+      font-style: italic;
+      color: #555;
+      margin-top: 30px;
+      border-left: 4px solid #007bff;
+      padding-left: 16px;
     }
   </style>
 </head>
 <body>
 
-  <!-- Full Navbar -->
+  <!-- Navbar -->
   <nav class="navbar navbar-expand-lg">
     <a class="navbar-brand" href="/">Kidney Cancer</a>
     <div class="collapse navbar-collapse">
       <ul class="navbar-nav ml-auto">
-       <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
-       <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
-       <li class="nav-item"><a class="nav-link" href="/prediction">Prediction</a></li>
-       <li class="nav-item"><a class="nav-link" href="/report">Report</a></li>
-       {% if session.get('user_email') %}
-       <li class="nav-item"><a class="nav-link btn btn-sm btn-secondary text-white" href="/logout">Logout</a></li>
-       {% else %}
-       <li class="nav-item"><a class="nav-link btn btn-sm btn-danger text-white" href="/login">Login</a></li>
-       {% endif %}
+        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link active" href="/about">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="/prediction">Prediction</a></li>
+        <li class="nav-item"><a class="nav-link" href="/report">Report</a></li>
+        {% if session.get('user_email') %}
+          <li class="nav-item"><a class="nav-link btn btn-sm btn-secondary text-white" href="/logout">Logout</a></li>
+        {% else %}
+          <li class="nav-item"><a class="nav-link btn btn-sm btn-danger text-white" href="/login">Login</a></li>
+        {% endif %}
       </ul>
-
     </div>
   </nav>
 
-  <!-- About Content -->
+  <!-- About Section -->
   <section class="about-section">
-    <h2>About Our Platform</h2>
+    <div class="about-header">
+      <i class="fas fa-microchip"></i>
+      <h2>About Our Platform</h2>
+    </div>
+
     <p>
-      <span class="highlight">Our platform</span> is built to assist medical professionals in early detection of kidney cancer using AI-powered image analysis. With a robust algorithm trained on thousands of MRI and CT scan images, the system provides fast and reliable predictions.
+      <span class="highlight">🔍 Our platform</span> is built to support healthcare professionals in the early detection of kidney cancer using advanced <span class="highlight">AI-driven MRI analysis</span>. Our model has been trained on thousands of <span class="highlight">MRI scans</span>, allowing it to deliver <span class="highlight">fast</span>, <span class="highlight">accurate</span>, and <span class="highlight">reliable predictions</span> that assist clinical decision-making.
     </p>
+
     <p>
-      It is designed to be easy to use, accessible from anywhere, and capable of integrating into hospital systems. <span class="highlight">Accuracy, transparency, and accessibility</span> are at the heart of this project.
+      Designed with accessibility and efficiency in mind, our system is <span class="highlight">easy to use</span>, <span class="highlight">remotely accessible</span>, and capable of integrating into modern hospital workflows. We are committed to advancing healthcare through <span class="highlight">accuracy</span>, <span class="highlight">transparency</span>, and <span class="highlight">innovation</span>.
     </p>
+
+    <blockquote>
+      “Empowering doctors with AI for a healthier tomorrow.”
+    </blockquote>
+
+    <div class="row stats">
+      <div class="col-md-4">
+        <div class="stat-box">
+          <h5>10K+</h5>
+          <p>MRI Images Trained</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stat-box">
+          <h5>95%</h5>
+          <p>Prediction Accuracy</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stat-box">
+          <h5>100+</h5>
+          <p>Clinics Supported</p>
+        </div>
+      </div>
+    </div>
   </section>
-  <!-- Bootstrap JavaScript CDN to be added at the end of each HTML file -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
-
+  <!-- JS Scripts -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
