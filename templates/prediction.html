@@ -1,197 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <title>Prediction - Kidney Cancer Detection</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
-
-  <!-- Bootstrap CSS -->
-  <link
-    rel="stylesheet"
-    href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-  />
-
+  <title>Prediction - KidneyAI</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
   <style>
-        body, html {
-      height: 100%;
+    body, html {
       margin: 0;
+      padding: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: url('static/image/kidney-back.jpg') no-repeat center center fixed;
-      background-size: cover;
+      background: linear-gradient(to right, #e0f2f1, #e3f2fd);
     }
 
-    
-    .overlay {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5); /* Dark semi-transparent background */
-      z-index: 1;
-    }
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #676b6d;
-    }
     .navbar {
-      background-color: #f9f6f6;
-      padding: 15px 40px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      background-color: #1f2937;
     }
-    .navbar-brand,
-    .nav-link {
-      color: #0c0c40;
-      font-weight: bold;
+
+    .navbar-brand, .nav-link {
+      color: #f8f9fa !important;
+      font-weight: 600;
     }
+
     .nav-link:hover {
-      color: #007bff;
+      color: #fbbf24 !important;
     }
-    .form-section {
-      background-color: #fff;
-      margin: 60px auto;
-      padding: 50px 40px;
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-      max-width: 700px;
+
+    .prediction-section {
+      padding: 80px 20px;
     }
-    .form-section h2 {
-      color: #0c0c40;
-      font-weight: bold;
+
+    .prediction-box {
+      background: linear-gradient(to bottom right, #ffffff, #f9f9fb);
+      padding: 45px;
+      border-radius: 20px;
+      max-width: 720px;
+      margin: 0 auto;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12);
+      border: 1px solid #e2e8f0;
+    }
+
+    .prediction-box h2 {
       text-align: center;
+      font-size: 2.5rem;
+      color: #1e3a8a;
       margin-bottom: 30px;
     }
+
+    .form-control, .form-control-file {
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+    }
+
     .btn-predict {
-      background-color: #007bff;
+      background-color: #dc2626;
       color: #fff;
-      padding: 10px 25px;
+      padding: 12px 28px;
       border: none;
-      border-radius: 4px;
+      border-radius: 5px;
       font-weight: bold;
+      box-shadow: 0 2px 6px rgba(220, 38, 38, 0.4);
     }
+
     .btn-predict:hover {
-      background-color: #0056b3;
+      background-color: #b91c1c;
     }
-    .error-message {
-      color: red;
-      font-weight: bold;
-      text-align: center;
-      margin-bottom: 20px;
+
+    .form-text-warning {
+      color: #db0d0d;
+      font-size: 1rem;
     }
+
+ footer {
+  background-color: #1f2937;
+  color: #f8f9fa;
+  padding: 24px 20px;
+  text-align: center;
+  font-size: 0.95rem;
+  margin-top: 60px;
+  width: 100%;
+  position: relative;
+  bottom: 0;
+}
+
   </style>
 </head>
+
 <body>
-  <!-- Navbar -->
   <nav class="navbar navbar-expand-lg">
-    <a class="navbar-brand" href="/">Kidney Cancer</a>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-toggle="collapse"
-      data-target="#navbarNav"
-    >
-      <span class="navbar-toggler-icon">☰</span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
+    <a class="navbar-brand" href="/">KidneyAI</a>
+    <div class="collapse navbar-collapse">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
         <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
-        <li class="nav-item">
-          <a class="nav-link active text-primary" href="/prediction">Prediction</a>
-        </li>
+        <li class="nav-item"><a class="nav-link active text-warning" href="/prediction">Prediction</a></li>
         <li class="nav-item"><a class="nav-link" href="/report">Report</a></li>
+        <li class="nav-item">
+        <a class="nav-link {% if request.path == '/analysis' %}active text-warning{% endif %}" href="/analysis">Analysis</a>
+        </li>
+
         {% if session.get('user_email') %}
-        <li class="nav-item">
-          <a class="nav-link btn btn-sm btn-secondary text-white" href="/logout"
-            >Logout</a
-          >
-        </li>
+        <li class="nav-item"><a class="nav-link btn btn-sm btn-outline-light ml-2" href="/logout">Logout</a></li>
         {% else %}
-        <li class="nav-item">
-          <a class="nav-link btn btn-sm btn-danger text-white" href="/login"
-            >Login</a
-          >
-        </li>
+        <li class="nav-item"><a class="nav-link btn btn-sm btn-warning text-dark ml-2" href="/login">Login</a></li>
         {% endif %}
       </ul>
     </div>
   </nav>
 
-  <!-- Prediction Form Section -->
-  <section class="form-section">
-    <h2>Kidney Cancer MRI Prediction</h2>
+  <section class="prediction-section">
+    <div class="prediction-box">
+      <h2>Upload Your MRI Scan</h2>
 
-    {% if error %}
-    <div class="error-message">{{ error }}</div>
-    {% endif %}
+      {% if error %}
+      <div class="alert alert-danger text-center">{{ error }}</div>
+      {% endif %}
 
-    {% if result %}
-    <div class="alert alert-info text-center">
-      <strong>Prediction Result:</strong> {{ result }}
+      {% if result %}
+      <div class="alert alert-info text-center">
+        <strong>Prediction Result:</strong> {{ result }}
+      </div>
+      {% endif %}
+
+      <form method="POST" enctype="multipart/form-data" action="/prediction">
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" name="name" id="name" class="form-control" placeholder="Enter your full name" required />
+        </div>
+
+        <div class="form-group">
+          <label for="age">Age</label>
+          <input type="number" name="age" id="age" class="form-control" placeholder="Enter your age" required />
+        </div>
+
+        <div class="form-group">
+          <label for="gender">Gender</label>
+          <select name="gender" id="gender" class="form-control" required>
+            <option value="">Select gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="image">Upload MRI Kidney Scan</label>
+          <input type="file" name="image" id="image" class="form-control-file" accept=".jpg,.jpeg,.png" required />
+          <small class="form-text form-text-warning mt-2">
+            Accepted formats: .jpg, .jpeg, .png — MRI scans only.
+          </small>
+        </div>
+
+        <div class="text-center mt-4">
+          <button type="submit" class="btn btn-predict">Predict</button>
+        </div>
+      </form>
     </div>
-    {% endif %}
-
-    <form
-      method="POST"
-      enctype="multipart/form-data"
-      action="/prediction"
-    >
-      <div class="form-group">
-        <label for="name">Full Name</label>
-        <input
-          type="text"
-          name="name"
-          id="name"
-          class="form-control"
-          placeholder="Enter your full name"
-          required
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="age">Age</label>
-        <input
-          type="number"
-          name="age"
-          id="age"
-          class="form-control"
-          placeholder="Enter your age"
-          required
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="gender">Gender</label>
-        <select name="gender" id="gender" class="form-control" required>
-          <option value="">Select gender</option>
-          <option value="male">Male</option>
-          <option value="female">Female</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="image">Upload MRI Kidney Scan</label>
-        <input
-          type="file"
-          name="image"
-          id="image"
-          class="form-control-file"
-          accept=".jpg,.jpeg,.png"
-          required
-        />
-        <small class="form-text text-warning mt-2">
-          Accepted formats: .jpg, .jpeg, .png — MRI scans only.
-        </small>
-      </div>
-
-      <div class="text-center mt-4">
-        <button type="submit" class="btn btn-predict">Predict</button>
-      </div>
-    </form>
   </section>
 
-  <!-- Bootstrap JS -->
+  <footer>
+    <p>&copy; 2025 KidneyAI. All rights reserved. | <a href="/privacy" class="text-light">Privacy Policy</a></p>
+  </footer>
+
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

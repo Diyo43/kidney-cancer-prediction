@@ -2,200 +2,133 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Kidney Cancer Detection - Home</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Home - KidneyAI</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
   <style>
-    body,
-    html {
+    html, body {
       height: 100%;
       margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
       font-family: 'Segoe UI', sans-serif;
-      background: url('static/image/kidney-back.jpg') no-repeat center center fixed;
-      background-size: cover;
+      background-color: #f8f9fa;
+      color: #212529;
     }
 
-    /* Navbar */
     .navbar {
-      background-color: #f7f5f5;
-      padding: 15px 40px;
-      border-bottom: 2px solid #dee2e6;
+      background-color: #1f2937;
     }
 
-    .navbar-brand {
-      color: #0c0c40;
-      font-weight: bold;
-    }
-
-    .nav-link {
-      color: #0c0c40 !important;
-      margin-right: 15px;
+    .navbar-brand, .nav-link {
+      color: #f8f9fa !important;
+      font-weight: 600;
     }
 
     .nav-link:hover {
-      color: orangered !important;
+      color: #fbbf24 !important;
     }
 
-    /* Hero Section */
     .hero-section {
-      display: flex;
-      justify-content: space-between;
-      padding: 80px 10%;
-      margin: 60px auto;
-      border-radius: 16px;
-      max-width: 1200px;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
-    }
-
-    .hero-text {
-      max-width: 45%;
-    }
-
-    .hero-text h2 {
-      font-size: 42px;
-      font-weight: bold;
-      color: #0c0c40;
-    }
-
-    .hero-text h2 span {
-      color: orangered;
-      text-transform: uppercase;
-    }
-
-    .hero-text p {
-      font-size: 18px;
-      color: #333;
-      margin-top: 15px;
-    }
-
-    .hero-image {
-      flex: 1;
-      max-width: 45%;
-      margin-top: 20px;
-      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-
-    .hero-image img {
-      width: 100%;
-      display: block;
-    }
-
-    /* About Section */
-    .about-section {
-      display: flex;
-      align-items: flex-start;
-      justify-content: flex-start;
-      padding: 60px 10%;
-      background-color: rgba(255, 255, 255, 0.7);
-      text-align: left;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
-      border-radius: 16px;
-      max-width: 1200px;
-      margin: 60px auto;
-    }
-
-    .about-text {
-      flex: 1;
-      padding: 20px;
-    }
-
-    .about-section h2 {
-      font-size: 36px;
-      color: orangered;
-      font-weight: bold;
-      margin-bottom: 30px;
-      text-transform: uppercase;
-    }
-
-    .about-section p {
-      font-size: 18px;
-      color: #333;
-      line-height: 1.6;
-      margin: 0 auto;
-      max-width: 500px;
-    }
-
-    .about-section p:first-of-type {
-      color: #0c0c40;
-    }
-
-    /* Footer */
-    footer {
-      background-color: #f4f2f2;
-      color: rgb(11, 11, 11);
-      padding: 30px 10%;
+      background: url('static/image/kidney.jpg') no-repeat center center;
+      background-size: cover;
+      padding: 120px 20px;
       text-align: center;
+      color: #ffffff;
     }
 
-    footer a {
-      color: rgb(16, 15, 15);
-      text-decoration: none;
-      margin: 0 15px;
+    .hero-section h1 {
+      font-size: 3rem;
+      font-weight: bold;
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
     }
 
-    footer a:hover {
-      color: orangered;
+    .hero-section p {
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: 20px auto;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    .info-section {
+      padding: 60px 20px;
+      background-color: #ffffff;
+      flex-grow: 1;
+    }
+
+    .info-section h2 {
+      text-align: center;
+      color: #1f2937;
+      margin-bottom: 30px;
+    }
+
+    .info-section p {
+      max-width: 900px;
+      margin: 0 auto;
+      font-size: 1.3rem;
+      line-height: 1.8;
+      color: #101111;
+    }
+
+    footer {
+      background-color: #1f2937;
+      color: #f8f9fa;
+      padding: 15px 20px;
+      text-align: center;
+      font-size: 1.05rem;
+      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.15);
     }
   </style>
 </head>
 
 <body>
-
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-light">
-    <a class="navbar-brand" href="/">Kidney Cancer Detection</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
-      <span class="navbar-toggler-icon">☰</span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
+  <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="/">KidneyAI</a>
+    <div class="collapse navbar-collapse">
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link active text-warning" href="/">Home</a></li>
         <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
         <li class="nav-item"><a class="nav-link" href="/prediction">Prediction</a></li>
         <li class="nav-item"><a class="nav-link" href="/report">Report</a></li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.path == '/analysis' %}active text-warning{% endif %}" href="/analysis">Analysis</a>
+        </li>
         {% if session.get('user_email') %}
-        <li class="nav-item"><a class="nav-link btn btn-sm btn-secondary text-white" href="/logout">Logout</a></li>
+        <li class="nav-item"><a class="nav-link btn btn-sm btn-outline-light ml-2" href="/logout">Logout</a></li>
         {% else %}
-        <li class="nav-item"><a class="nav-link btn btn-sm btn-danger text-white" href="/login">Login</a></li>
+        <li class="nav-item"><a class="nav-link btn btn-sm btn-warning text-dark ml-2" href="/login">Login</a></li>
         {% endif %}
       </ul>
     </div>
   </nav>
 
-  <!-- Hero Section -->
   <section class="hero-section">
-    <div class="hero-text">
-      <h2>Find the Most <span>Accurate</span> Online Kidney Cancer <span>Prediction</span></h2>
-      <p>Our AI-driven platform enables fast and accurate detection of kidney cancer using MRI images. Trusted by healthcare professionals worldwide.</p>
-    </div>
-    <div class="hero-image">
-      <img src="static/image/kidney.jpg" alt="Kidney Illustration">
-    </div>
+    <h1>Welcome to KidneyAI</h1>
+    <p>
+      KidneyAI is a smart diagnostic platform built to detect kidney cancer through MRI scan analysis.
+      With the power of deep learning, it delivers results in seconds to assist medical professionals and save lives.
+    </p>
   </section>
 
-  <!-- About Section -->
-  <section class="about-section">
-    <div class="about-text">
-      <h2>About the Kidney Cancer Detection System</h2>
-      <p>The Kidney Cancer Detection System uses advanced artificial intelligence (AI) and deep learning to analyze MRI images and detect signs of kidney cancer with high precision. By leveraging convolutional neural networks (CNNs), the system identifies abnormalities in kidney structures from MRI scans only.</p>
-      <p>This platform helps doctors detect kidney cancer early, improving patient outcomes by enabling faster treatment. It integrates easily into existing hospital systems, providing a reliable and user-friendly experience for medical professionals globally.</p>
-      <p>With models trained on a large MRI dataset, the system ensures accessibility, speed, and accuracy — key factors in revolutionizing early cancer diagnosis and saving lives.</p>
-    </div>
+  <section class="info-section">
+    <h2>Our Mission</h2>
+    <p>
+      We aim to bring accessible, AI-powered kidney cancer detection to hospitals and clinics around the world.
+      By enhancing accuracy and speed, KidneyAI supports doctors in diagnosing early, treating earlier, and improving
+      patient outcomes. No setup required. Just upload, analyze, and act.
+    </p>
   </section>
 
-  <!-- Footer -->
   <footer>
-    <p>&copy; 2025 Kidney Cancer Detection. All Rights Reserved.</p>
-    <a href="/contact">Contact</a> | <a href="/privacy">Privacy Policy</a> | <a href="/terms">Terms of Service</a>
+    <p>&copy; 2025 KidneyAI. All rights reserved. |
+      <a href="/privacy" class="text-light">Privacy Policy</a>
+    </p>
   </footer>
 
-  <!-- Scripts -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 
 </html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Analysis - KidneyAI</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #f0f4f8, #e0f7fa);
+    }
+    .navbar {
+      background-color: #1f2937;
+    }
+    .navbar-brand, .nav-link {
+      color: #f8f9fa !important;
+      font-weight: 600;
+    }
+    .nav-link:hover {
+      color: #fbbf24 !important;
+    }
+    .analysis-section {
+      padding: 80px 20px;
+    }
+    .analysis-box {
+      background-color: #ffffff;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 950px;
+      margin: 0 auto;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+    .analysis-box h2 {
+      text-align: center;
+      font-size: 2rem;
+      color: #1f2937;
+      margin-bottom: 30px;
+    }
+    .summary {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+    .summary-box {
+      flex: 1;
+      background-color: #f1f5f9;
+      margin: 10px;
+      border-radius: 10px;
+      text-align: center;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+    .summary-box h4 {
+      font-size: 16px;
+      color: #64748b;
+    }
+    .summary-box p {
+      font-size: 28px;
+      font-weight: bold;
+      margin: 0;
+      color: #0f172a;
+    }
+    .chart-container {
+      margin-top: 40px;
+    }
+    canvas {
+      max-width: 100%;
+    }
+    footer {
+      background-color: #1f2937;
+      color: #f8f9fa;
+      padding: 24px 20px;
+      text-align: center;
+      font-size: 0.95rem;
+      margin-top: 60px;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="/">KidneyAI</a>
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="/prediction">Prediction</a></li>
+        <li class="nav-item"><a class="nav-link" href="/report">Report</a></li>
+        <li class="nav-item"><a class="nav-link active text-warning" href="/analysis">Analysis</a></li>
+        {% if session.get('user_email') %}
+        <li class="nav-item"><a class="nav-link btn btn-sm btn-outline-light ml-2" href="/logout">Logout</a></li>
+        {% else %}
+        <li class="nav-item"><a class="nav-link btn btn-sm btn-warning text-dark ml-2" href="/login">Login</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </nav>
+
+  <section class="analysis-section">
+    <div class="analysis-box">
+      <h2>Prediction Analysis</h2>
+      <div class="summary">
+        <div class="summary-box">
+          <h4>Total Predictions</h4>
+          <p>{{ total or 0 }}</p>
+        </div>
+        <div class="summary-box">
+          <h4>Normal Cases</h4>
+          <p style="color: #22c55e;">{{ normal or 0 }}</p>
+        </div>
+        <div class="summary-box">
+          <h4>Cancer Detected</h4>
+          <p style="color: #ef4444;">{{ abnormal or 0 }}</p>
+        </div>
+      </div>
+
+      <div class="chart-container">
+        <canvas id="doughnutChart" height="100"></canvas>
+      </div>
+
+      <div class="chart-container mt-5">
+        <canvas id="barChart" height="150"></canvas>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 KidneyAI. All rights reserved. | <a href="/privacy" class="text-light">Privacy Policy</a></p>
+  </footer>
+
+  <script>
+    const doughnutCtx = document.getElementById('doughnutChart').getContext('2d');
+    new Chart(doughnutCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Normal', 'Cancer Detected'],
+        datasets: [{
+          data: [{{ normal | tojson | safe }}, {{ abnormal | tojson | safe }}],
+          backgroundColor: ['#22c55e', '#ef4444'],
+          borderColor: '#f1f5f9',
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'bottom' }
+        }
+      }
+    });
+
+    const barCtx = document.getElementById('barChart').getContext('2d');
+    new Chart(barCtx, {
+      type: 'bar',
+      data: {
+        labels: {{ labels | tojson | safe }},
+        datasets: [{
+          label: 'Predictions per Day',
+          data: {{ values | tojson | safe }},
+          backgroundColor: '#3b82f6',
+          borderRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        },
+        plugins: {
+          legend: { display: false }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

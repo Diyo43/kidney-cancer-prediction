@@ -1,184 +1,203 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <title>About - Kidney Cancer Detection</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  
-  <!-- Bootstrap + Font Awesome -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+  <title>About - KidneyAI</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <style>
     body, html {
-      height: 100%;
       margin: 0;
+      padding: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: url('static/image/kidney-back.jpg') no-repeat center center fixed;
-      background-size: cover;
+      background-color: #f0f4f8;
+      color: #212529;
     }
 
     .navbar {
-      background-color: #fbf8f8;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-      padding: 15px 40px;
+      background-color: #1f2937;
     }
 
-    .navbar-brand {
-      color: #0c0c40;
-      font-weight: bold;
-      font-size: 24px;
-    }
-
-    .nav-link {
-      color: #0c0c40;
-      margin-right: 20px;
-    }
-
-    .nav-link:hover {
-      color: #007bff;
-    }
-
-    .about-section {
-      background-color: rgba(255, 255, 255, 0.95);
-      padding: 60px 40px;
-      margin: 60px auto;
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-      max-width: 1000px;
-      transition: all 0.3s ease-in-out;
-    }
-
-    .about-section:hover {
-      transform: scale(1.01);
-    }
-
-    .about-header {
-      display: flex;
-      align-items: center;
-      margin-bottom: 30px;
-    }
-
-    .about-header i {
-      font-size: 40px;
-      color: #007bff;
-      margin-right: 20px;
-    }
-
-    .about-section h2 {
-      color: #0c0c40;
-      font-weight: bold;
-      font-size: 32px;
-      margin: 0;
-    }
-
-    .about-section p {
-      font-size: 16px;
-      color: #444;
-      line-height: 1.8;
-    }
-
-    .highlight {
-      color: #007bff;
+    .navbar-brand, .nav-link {
+      color: #f8f9fa !important;
       font-weight: 600;
     }
 
-    .stats {
-      margin-top: 40px;
+    .nav-link:hover {
+      color: #fbbf24 !important;
     }
 
-    .stat-box {
-      background-color: #f5f7fa;
-      padding: 20px;
-      border-radius: 8px;
+    .banner {
+      background: linear-gradient(to right, #415a77, #1b263b);
+      padding: 80px 0;
       text-align: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      color: #ffffff;
     }
 
-    .stat-box h5 {
-      font-size: 28px;
-      color: #0c0c40;
+    .banner h1 {
+      font-size: 2.8rem;
       font-weight: bold;
     }
 
-    .stat-box p {
-      margin: 0;
-      font-size: 14px;
-      color: #555;
+    .info-section {
+      padding: 60px 20px;
+      background-color: #fefefe;
     }
 
-    blockquote {
-      font-style: italic;
-      color: #555;
-      margin-top: 30px;
-      border-left: 4px solid #007bff;
-      padding-left: 16px;
+    .info-text {
+      max-width: 1000px;
+      margin: 0 auto;
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: #374151;
+    }
+
+    .highlight {
+      color: #e76f51;
+      font-weight: 600;
+    }
+
+    .features {
+      padding: 50px 0;
+      background-color: #e0f7fa;
+    }
+
+    .feature-card {
+      text-align: center;
+      padding: 30px;
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .feature-icon {
+      font-size: 36px;
+      color: #2a9d8f;
+      margin-bottom: 15px;
+    }
+
+    .stats {
+      background-color: #f1f5f9;
+      padding: 60px 0;
+    }
+
+    .stat-box {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .stat-box h3 {
+      font-size: 2rem;
+      color: #2a9d8f;
+    }
+
+    .stat-box p {
+      color: #4a5568;
+    }
+
+    footer {
+      background-color: #1f2937;
+      color: #f8f9fa;
+      padding: 20px;
+      text-align: center;
     }
   </style>
 </head>
-<body>
 
-  <!-- Navbar -->
+<body>
   <nav class="navbar navbar-expand-lg">
-    <a class="navbar-brand" href="/">Kidney Cancer</a>
+    <a class="navbar-brand" href="/">KidneyAI</a>
     <div class="collapse navbar-collapse">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-        <li class="nav-item"><a class="nav-link active" href="/about">About</a></li>
+        <li class="nav-item"><a class="nav-link active text-warning" href="/about">About</a></li>
         <li class="nav-item"><a class="nav-link" href="/prediction">Prediction</a></li>
         <li class="nav-item"><a class="nav-link" href="/report">Report</a></li>
+        <li class="nav-item">
+        <a class="nav-link {% if request.path == '/analysis' %}active text-warning{% endif %}" href="/analysis">Analysis</a>
+        </li>
+
         {% if session.get('user_email') %}
-          <li class="nav-item"><a class="nav-link btn btn-sm btn-secondary text-white" href="/logout">Logout</a></li>
+        <li class="nav-item"><a class="nav-link btn btn-sm btn-outline-light ml-2" href="/logout">Logout</a></li>
         {% else %}
-          <li class="nav-item"><a class="nav-link btn btn-sm btn-danger text-white" href="/login">Login</a></li>
+        <li class="nav-item"><a class="nav-link btn btn-sm btn-warning text-dark ml-2" href="/login">Login</a></li>
         {% endif %}
       </ul>
     </div>
   </nav>
 
-  <!-- About Section -->
-  <section class="about-section">
-    <div class="about-header">
-      <i class="fas fa-microchip"></i>
-      <h2>About Our Platform</h2>
+  <section class="banner">
+    <div class="container">
+      <h1>About KidneyAI</h1>
     </div>
+  </section>
 
-    <p>
-      <span class="highlight">🔍 Our platform</span> is built to support healthcare professionals in the early detection of kidney cancer using advanced <span class="highlight">AI-driven MRI analysis</span>. Our model has been trained on thousands of <span class="highlight">MRI scans</span>, allowing it to deliver <span class="highlight">fast</span>, <span class="highlight">accurate</span>, and <span class="highlight">reliable predictions</span> that assist clinical decision-making.
-    </p>
+  <section class="info-section">
+    <div class="info-text">
+      <p><span class="highlight">KidneyAI</span> is a cutting-edge AI tool built to support early kidney cancer detection. Our system analyzes <strong>MRI scans</strong> with high accuracy, helping doctors make faster, more informed decisions.</p>
+      <p>Trained on thousands of verified medical images, KidneyAI leverages the power of deep learning to spot abnormalities with confidence. We believe that <span class="highlight">speed</span>, <span class="highlight">accuracy</span>, and <span class="highlight">accessibility</span> are key to transforming cancer diagnostics globally.</p>
+    </div>
+  </section>
 
-    <p>
-      Designed with accessibility and efficiency in mind, our system is <span class="highlight">easy to use</span>, <span class="highlight">remotely accessible</span>, and capable of integrating into modern hospital workflows. We are committed to advancing healthcare through <span class="highlight">accuracy</span>, <span class="highlight">transparency</span>, and <span class="highlight">innovation</span>.
-    </p>
-
-    <blockquote>
-      “Empowering doctors with AI for a healthier tomorrow.”
-    </blockquote>
-
-    <div class="row stats">
-      <div class="col-md-4">
-        <div class="stat-box">
-          <h5>10K+</h5>
-          <p>MRI Images Trained</p>
+  <section class="features">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-4 mb-4">
+          <div class="feature-card">
+            <div class="feature-icon">🔬</div>
+            <h5>AI-Driven</h5>
+            <p>Harnesses convolutional neural networks (CNNs) trained on MRI data.</p>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h5>Fast Response</h5>
+            <p>Instant prediction feedback to reduce diagnostic delays.</p>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="feature-card">
+            <div class="feature-icon">🔐</div>
+            <h5>Privacy First</h5>
+            <p>Scan data never leaves the system — fully secure and confidential.</p>
+          </div>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="stat-box">
-          <h5>95%</h5>
-          <p>Prediction Accuracy</p>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-4 stat-box">
+          <h3>7K+</h3>
+          <p>MRI Scans Trained</p>
         </div>
-      </div>
-      <div class="col-md-4">
-        <div class="stat-box">
-          <h5>100+</h5>
+        <div class="col-md-4 stat-box">
+          <h3>95%</h3>
+          <p>Model Accuracy</p>
+        </div>
+        <div class="col-md-4 stat-box">
+          <h3>100+</h3>
           <p>Clinics Supported</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- JS Scripts -->
+  <footer>
+    <p>&copy; 2025 KidneyAI. All rights reserved. | <a href="/privacy" class="text-light">Privacy Policy</a></p>
+  </footer>
+
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

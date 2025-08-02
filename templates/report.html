@@ -1,129 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Report - Kidney Cancer Detection</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Report - KidneyAI</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
   <style>
-        body, html {
+    html, body {
       height: 100%;
       margin: 0;
+      padding: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: url('static/image/kidney-back.jpg') no-repeat center center fixed;
-      background-size: cover;
+      background: linear-gradient(to right, #f0f4f8, #dbeafe);
+      display: flex;
+      flex-direction: column;
     }
 
-    
-    .overlay {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5); /* Dark semi-transparent background */
-      z-index: 1;
-    }
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #676b6d;
-    }
     .navbar {
-      background-color: #f6efef;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-      padding: 15px 40px;
+      background-color: #1f2937;
     }
-    .navbar-brand {
-      color: #0c0c40;
-      font-weight: bold;
-      font-size: 24px;
+
+    .navbar-brand, .nav-link {
+      color: #f8f9fa !important;
+      font-weight: 600;
     }
-    .nav-link {
-      color: #0c0c40;
-      margin-right: 20px;
-    }
+
     .nav-link:hover {
-      color: #007bff;
+      color: #fbbf24 !important;
     }
+
     .report-section {
+      padding: 80px 20px;
+      flex-grow: 1;
+    }
+
+    .report-box {
       background-color: #ffffff;
-      margin: 50px auto;
+      border-radius: 20px;
       padding: 40px;
-      border-radius: 8px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
-      max-width: 1000px;
+      max-width: 1100px;
+      margin: 0 auto;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+      border: 1px solid #e5e7eb;
     }
-    .report-section h2 {
-      color: #0c0c40;
-      font-weight: bold;
-      font-size: 28px;
-      margin-bottom: 30px;
+
+    .report-box h2 {
       text-align: center;
+      font-size: 2rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 30px;
     }
+
     .table th {
-      background-color: #f0f3f5;
-      color: #0c0c40;
+      background-color: #3b82f6;
+      color: white;
+    }
+
+    .table td {
+      background-color: #ffffff;
+    }
+
+    .table td strong {
+      font-weight: 600;
+    }
+
+    .download-btn {
+      display: block;
+      margin: 20px auto 0 auto;
+      background-color: #10b981;
+      color: white;
+      font-weight: 600;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 20px;
+      box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+    }
+
+    .download-btn:hover {
+      background-color: #059669;
+    }
+
+    footer {
+      background-color: #1f2937;
+      color: #f8f9fa;
+      padding: 15px 20px;
+      text-align: center;
+      font-size: 1.05rem;
+      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.15);
     }
   </style>
 </head>
+
 <body>
+  <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="/">KidneyAI</a>
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="/prediction">Prediction</a></li>
+        <li class="nav-item"><a class="nav-link active text-warning" href="/report">Report</a></li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.path == '/analysis' %}active text-warning{% endif %}" href="/analysis">Analysis</a>
+        </li>
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light">
-  <a class="navbar-brand font-weight-bold text-dark" href="/">Kidney Cancer</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon">☰</span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav ml-auto">
-      <li class="nav-item"><a class="nav-link text-dark" href="/">Home</a></li>
-      <li class="nav-item"><a class="nav-link text-dark" href="/about">About</a></li>
-      <li class="nav-item"><a class="nav-link text-dark" href="/prediction">Prediction</a></li>
-      <li class="nav-item"><a class="nav-link text-primary font-weight-bold" href="/report">Report</a></li>
-      <li class="nav-item">
         {% if session.get('user_email') %}
-          <a class="nav-link btn btn-sm btn-secondary text-white" href="/logout">Logout</a>
+        <li class="nav-item"><a class="nav-link btn btn-sm btn-outline-light ml-2" href="/logout">Logout</a></li>
         {% else %}
-          <a class="nav-link btn btn-sm btn-danger text-white" href="/login">Login</a>
+        <li class="nav-item"><a class="nav-link btn btn-sm btn-warning text-dark ml-2" href="/login">Login</a></li>
         {% endif %}
-      </li>
-    </ul>
-  </div>
-</nav>
+      </ul>
+    </div>
+  </nav>
 
-<!-- Report Section -->
-<section class="report-section">
-  <h2>Prediction Report</h2>
-  <table class="table table-bordered table-striped">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Age</th>
-        <th>Gender</th>
-        <th>Scan Type</th>
-        <th>Prediction</th>
-        <th>Date</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for r in reports %}
-      <tr>
-        <td>{{ r.name }}</td>
-        <td>{{ r.age }}</td>
-        <td>{{ r.gender }}</td>
-        <td>MRI</td>
-        <td style="color: {{ 'green' if 'Normal' in r.result else 'red' }}">
-          <strong>{{ r.result }}</strong>
-        </td>
-        <td>{{ r.date }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</section>
+  <section class="report-section">
+    <div class="report-box" id="report-box">
+      <h2>Prediction Report</h2>
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Age</th>
+              <th>Gender</th>
+              <th>Scan Type</th>
+              <th>Prediction</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for r in reports %}
+            <tr>
+              <td>{{ r.name }}</td>
+              <td>{{ r.age }}</td>
+              <td>{{ r.gender }}</td>
+              <td>MRI</td>
+              <td style="color: {{ 'green' if 'Normal' in r.result else 'red' }}">
+                <strong>{{ r.result }}</strong>
+              </td>
+              <td>{{ r.date }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <button class="download-btn" onclick="window.print()">Download/Print Report</button>
+    </div>
+  </section>
 
-<!-- Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+  <footer>
+    <p>&copy; 2025 KidneyAI. All rights reserved. |
+      <a href="/privacy" class="text-light">Privacy Policy</a>
+    </p>
+  </footer>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
